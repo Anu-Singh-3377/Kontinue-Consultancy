@@ -1,0 +1,15 @@
+{
+  "name": "kontinue-consultancy-site",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n API,WEB \"node server/server.js\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "start:api": "npm --prefix server start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "kontinue-consultancy-site": "file:"
+  }
+}
