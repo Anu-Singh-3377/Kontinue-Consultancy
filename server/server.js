@@ -15,14 +15,29 @@ const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-app.use(cors({
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error('Origin is not allowed by CORS.'));
-  },
-}));
+app.use((req, res, next) => {
+  const forwardedHosts = (req.get('x-forwarded-host') || '')
+    .split(',')
+    .map((host) => host.trim());
+  const hosts = [req.get('host'), ...forwardedHosts].filter(Boolean);
+  const forwardedProtocols = (req.get('x-forwarded-proto') || '')
+    .split(',')
+    .map((protocol) => protocol.trim());
+  const protocols = [req.protocol, ...forwardedProtocols].filter(Boolean);
+  const origin = req.get('origin');
+  const sameOrigin = origin && hosts.some((host) =>
+    protocols.some((protocol) => origin === `${protocol}://${host}`),
+  );
+
+  cors({
+    origin(requestOrigin, callback) {
+      if (!requestOrigin || allowedOrigins.includes(requestOrigin) || sameOrigin) {
+        return callback(null, true);
+      }
+      return callback(new Error('Origin is not allowed by CORS.'));
+    },
+  })(req, res, next);
+});
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(express.json({ limit: '20kb' }));
 
