@@ -33,8 +33,8 @@ export default function ServiceDetailPage() {
               <h3 style={{ marginBottom: 12 }}>Core focus</h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
                 {service.activities.map((activity) => (
-                  <li key={activity} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#5d6971' }}>
-                    <CheckCircle2 size={18} color="#315c50" />
+                  <li key={activity} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#5b6576' }}>
+                    <CheckCircle2 size={18} color="#0b7b7d" />
                     <span>{activity}</span>
                   </li>
                 ))}
@@ -43,7 +43,13 @@ export default function ServiceDetailPage() {
           </div>
 
           <div className="card">
-            <img src={service.image} alt={service.title} style={{ borderRadius: 20, width: '100%', height: 320, objectFit: 'cover' }} />
+            <img
+              className="service-detail__image"
+              src={service.image}
+              alt={`${service.title} professional support`}
+              loading="lazy"
+              decoding="async"
+            />
             <ul className="service-detail__meta" style={{ marginTop: 20 }}>
               <li>
                 <strong>Target audience</strong>

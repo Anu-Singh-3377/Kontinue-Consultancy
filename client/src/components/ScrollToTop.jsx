@@ -6,6 +6,11 @@ export default function ScrollToTop() {
   const location = useLocation();
   const [visible, setVisible] = useState(false);
 
+  const scrollToTop = () => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+  };
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [location.pathname]);
@@ -20,7 +25,7 @@ export default function ScrollToTop() {
   if (!visible) return null;
 
   return (
-    <button type="button" className="scroll-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Scroll to top">
+    <button type="button" className="scroll-top" onClick={scrollToTop} aria-label="Scroll to top">
       <ChevronUp size={20} />
     </button>
   );

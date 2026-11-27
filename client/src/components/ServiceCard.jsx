@@ -1,10 +1,17 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Reveal from './Reveal';
 
-export default function ServiceCard({ item }) {
+export default function ServiceCard({ item, delay = 0 }) {
   return (
-    <article className="service-card">
-      <img className="service-card__image" src={item.image} alt={item.title} />
+    <Reveal as="article" className="service-card" delay={delay}>
+      <img
+        className="service-card__image"
+        src={item.image}
+        alt={`${item.title} professional support`}
+        loading="lazy"
+        decoding="async"
+      />
       <div className="service-card__body">
         <div className="service-card__icon">
           <ArrowRight size={18} />
@@ -15,6 +22,6 @@ export default function ServiceCard({ item }) {
           Learn more <ArrowRight size={16} />
         </Link>
       </div>
-    </article>
+    </Reveal>
   );
 }

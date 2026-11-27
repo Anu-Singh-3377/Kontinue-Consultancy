@@ -14,7 +14,11 @@ const contactDetails = [
 export default function ContactPage() {
   return (
     <>
-      <PageHero title="Contact" description="Tell us about your business needs and we will discuss the right support for your financial administration." />
+      <PageHero
+        title="Contact"
+        description="Tell us about your business needs and we will discuss the right support for your financial administration."
+        image="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=85"
+      />
 
       <section className="section">
         <div className="container contact-grid">
@@ -27,8 +31,8 @@ export default function ContactPage() {
                     <Icon size={18} />
                   </div>
                   <div>
-                    <strong style={{ display: 'block', color: '#173b45' }}>{label}</strong>
-                    <span style={{ color: '#5d6971' }}>{value}</span>
+                    <strong style={{ display: 'block', color: '#14233b' }}>{label}</strong>
+                    <span style={{ color: '#5b6576' }}>{value}</span>
                   </div>
                 </div>
               ))}

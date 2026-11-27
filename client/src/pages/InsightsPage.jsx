@@ -5,11 +5,15 @@ import { insights } from '../data/siteData';
 export default function InsightsPage() {
   return (
     <>
-      <PageHero title="Insights" description="Useful articles and perspectives on managing accounts, meeting responsibilities and keeping a business financially organised." />
+      <PageHero
+        title="Insights"
+        description="Useful articles and perspectives on managing accounts, meeting responsibilities and keeping a business financially organised."
+        image="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1800&q=85"
+      />
 
       <section className="section">
         <div className="container">
-          <div className="insights-grid" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
+          <div className="insights-grid">
             {insights.map((article) => (
               <BlogCard key={article.slug} article={article} />
             ))}

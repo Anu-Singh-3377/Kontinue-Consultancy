@@ -1,10 +1,57 @@
 export const navLinks = [
   { label: 'Home', to: '/' },
-  { label: 'About Us', to: '/about' },
   { label: 'Services', to: '/services' },
-  { label: 'Our Approach', to: '/approach' },
   { label: 'Insights', to: '/insights' },
+  { label: 'About Us', to: '/about' },
+  { label: 'Case Studies', to: '/case-studies' },
+];
+
+// Shown in the mobile drawer and footer so these routes stay reachable.
+export const secondaryNavLinks = [
+  { label: 'Our Approach', to: '/approach' },
   { label: 'Contact', to: '/contact' },
+];
+
+// TODO(client): verify these figures before publishing.
+export const aboutStats = [
+  { value: 50, suffix: '+', label: 'Dedicated Specialists' },
+  { value: 12, suffix: '+', label: 'Years of Impact' },
+  { value: 300, suffix: '+', label: 'Clients Trust Us' },
+];
+
+export const kontinueValues = [
+  { tag: 'Principle', title: 'Integrity First', description: 'Honest advice and transparent records, even when the answer is not the easy one.' },
+  { tag: 'Partnership', title: 'Collaborative Mindset', description: 'We work alongside your team, sharing context so decisions are made together.' },
+  { tag: 'Approach', title: 'Informed Agility', description: 'Grounded in detail, ready to adapt as regulations and your business change.' },
+  { tag: 'Outcome', title: 'Sustainable Results', description: 'Structures and habits that keep your finances clear long after the work is done.' },
+];
+
+// Placeholder case studies: replace with approved client stories before publishing.
+export const caseStudies = [
+  {
+    slug: 'retail-bookkeeping',
+    sector: 'Retail',
+    title: 'Bringing order to multi-location bookkeeping',
+    summary: 'Consolidated records across three stores into one monthly reporting cycle.',
+    result: 'Placeholder result',
+    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    slug: 'startup-annual-accounts',
+    sector: 'Technology',
+    title: 'First annual accounts for a growing start-up',
+    summary: 'Prepared year-end statements and set up a clear process for the years ahead.',
+    result: 'Placeholder result',
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    slug: 'cross-border-tax',
+    sector: 'Professional Services',
+    title: 'Clarifying cross-border tax obligations',
+    summary: 'Mapped Dutch and international filing responsibilities into a single calendar.',
+    result: 'Placeholder result',
+    image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=900&q=80',
+  },
 ];
 
 export const serviceCatalog = [
@@ -209,24 +256,18 @@ export const teamMembers = [
     designation: 'Professional Team Member',
     background: 'Profile information to be confirmed by the client.',
     qualifications: 'Qualifications to be added.',
-    image:
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80',
   },
   {
     name: 'Team profile to be added',
     designation: 'Professional Team Member',
     background: 'Profile information to be confirmed by the client.',
     qualifications: 'Qualifications to be added.',
-    image:
-      'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=900&q=80',
   },
   {
     name: 'Team profile to be added',
     designation: 'Professional Team Member',
     background: 'Profile information to be confirmed by the client.',
     qualifications: 'Qualifications to be added.',
-    image:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80',
   },
 ];
 

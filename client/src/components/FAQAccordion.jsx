@@ -17,7 +17,7 @@ export default function FAQAccordion({ items }) {
               aria-expanded={isOpen}
             >
               <span>{item.question}</span>
-              <ChevronDown size={18} style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }} />
+              <ChevronDown className={`faq-chevron ${isOpen ? 'faq-chevron--open' : ''}`} size={18} />
             </button>
             <div className="faq-answer">{item.answer}</div>
           </div>

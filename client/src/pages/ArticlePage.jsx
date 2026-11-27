@@ -29,12 +29,17 @@ export default function ArticlePage() {
         <div className="article-layout">
           <div>
             <div className="article-hero">
-              <img src={article.image} alt={article.title} />
+              <img
+                src={article.image}
+                alt={`Editorial image for ${article.title}`}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
             <div className="article-body">
-              <span style={{ color: '#315c50', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', fontSize: '0.72rem' }}>{article.category}</span>
+              <span style={{ color: '#0b7b7d', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.72rem' }}>{article.category}</span>
               <h1 className="heading heading--lg" style={{ marginTop: 16 }}>{article.title}</h1>
-              <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', color: '#5d6971', marginBottom: 24 }}>
+              <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', color: '#5b6576', marginBottom: 24 }}>
                 <span>{new Date(article.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                 <span>Author: {article.author}</span>
               </div>
@@ -42,7 +47,7 @@ export default function ArticlePage() {
                 <p key={paragraph}>{paragraph}</p>
               ))}
               {article.disclaimer && (
-                <div style={{ marginTop: 26, borderTop: '1px solid rgba(23,59,69,0.1)', paddingTop: 18, color: '#5d6971' }}>
+                <div style={{ marginTop: 26, borderTop: '1px solid rgba(20,35,59,0.1)', paddingTop: 18, color: '#5b6576' }}>
                   <strong>Disclaimer:</strong> {article.disclaimer}
                 </div>
               )}
@@ -54,8 +59,8 @@ export default function ArticlePage() {
             <div style={{ display: 'grid', gap: 18 }}>
               {related.map((item) => (
                 <Link key={item.slug} to={`/insights/${item.slug}`} style={{ display: 'grid', gap: 8 }}>
-                  <span style={{ color: '#315c50', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', fontSize: '0.72rem' }}>{item.category}</span>
-                  <strong style={{ color: '#173b45' }}>{item.title}</strong>
+                  <span style={{ color: '#0b7b7d', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', fontSize: '0.72rem' }}>{item.category}</span>
+                  <strong style={{ color: '#14233b' }}>{item.title}</strong>
                 </Link>
               ))}
             </div>

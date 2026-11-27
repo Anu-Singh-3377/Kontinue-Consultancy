@@ -1,9 +1,11 @@
-export default function BenefitCard({ title, description }) {
+import Reveal from './Reveal';
+
+export default function BenefitCard({ title, description, index = 1, delay = 0 }) {
   return (
-    <article className="benefit-card">
-      <span>01</span>
+    <Reveal as="article" className="benefit-card" delay={delay}>
+      <span>{String(index).padStart(2, '0')}</span>
       <h3>{title}</h3>
       <p>{description}</p>
-    </article>
+    </Reveal>
   );
 }

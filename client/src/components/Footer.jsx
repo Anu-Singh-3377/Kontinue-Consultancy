@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
@@ -6,8 +7,8 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <h4>KONTINU</h4>
-            <p style={{ maxWidth: 300 }}>Financial &amp; Accounting Consultancy</p>
+            <Logo height={26} className="footer-logo" />
+            <p className="footer-brand__descriptor">Financial &amp; Accounting Consultancy</p>
           </div>
 
           <div className="footer-column">
@@ -18,6 +19,7 @@ export default function Footer() {
               <Link to="/services">Services</Link>
               <Link to="/approach">Our Approach</Link>
               <Link to="/insights">Insights</Link>
+              <Link to="/case-studies">Case Studies</Link>
               <Link to="/contact">Contact</Link>
             </div>
           </div>

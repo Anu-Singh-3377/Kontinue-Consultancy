@@ -2,7 +2,7 @@
   "name": "kontinue-consultancy-site",
   "private": true,
   "scripts": {
-    "dev": "concurrently -k -n API,WEB \"node server/server.js\" \"npm --prefix client run dev\"",
+    "dev": "concurrently -n API,WEB \"node server/server.js\" \"npm --prefix client run dev\"",
     "build": "npm --prefix client run build",
     "start:api": "npm --prefix server start"
   },

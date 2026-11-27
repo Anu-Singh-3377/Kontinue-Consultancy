@@ -10,6 +10,7 @@ import ServiceDetailPage from './pages/ServiceDetailPage';
 import ApproachPage from './pages/ApproachPage';
 import InsightsPage from './pages/InsightsPage';
 import ArticlePage from './pages/ArticlePage';
+import CaseStudiesPage from './pages/CaseStudiesPage';
 import ContactPage from './pages/ContactPage';
 import LegalPage from './pages/LegalPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -27,6 +28,7 @@ function AppLayout() {
           <Route path="/approach" element={<ApproachPage />} />
           <Route path="/insights" element={<InsightsPage />} />
           <Route path="/insights/:slug" element={<ArticlePage />} />
+          <Route path="/case-studies" element={<CaseStudiesPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy-policy" element={<LegalPage slug="privacy-policy" />} />
           <Route path="/cookie-policy" element={<LegalPage slug="cookie-policy" />} />
