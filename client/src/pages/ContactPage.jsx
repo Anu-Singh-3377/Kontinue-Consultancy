@@ -39,7 +39,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="form-card">
+          <div className="form-card" id="contact-form">
             <h3 style={{ marginTop: 0 }}>Send an enquiry</h3>
             <ContactForm />
           </div>
@@ -49,7 +49,7 @@ export default function ContactPage() {
       <section className="section section--soft">
         <div className="container">
           <SectionHeading title="Book a consultation" subtitle="Share your preferred date and time and we will follow up to arrange a suitable conversation." />
-          <div className="form-card" style={{ maxWidth: 980, margin: '0 auto' }}>
+          <div className="form-card" id="book-consultation" style={{ maxWidth: 980, margin: '0 auto' }}>
             <ConsultationForm />
           </div>
         </div>

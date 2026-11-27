@@ -1,99 +1,166 @@
 import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { friendlyError } from '../lib/errors';
+import { notifyByEmail, SERVICE_OPTIONS } from '../lib/requests';
+import { supabase } from '../lib/supabaseClient';
+import { isEmail, isPhone, requireFields } from '../lib/validation';
+import AuthPrompt from './portal/AuthPrompt';
+import { FormField, fieldProps, useDraftForm, usePrefillFromProfile } from './portal/requestForm';
 
 const initialState = {
   name: '',
   company: '',
   email: '',
   phone: '',
-  service: 'Bookkeeping & Accounting',
+  address: '',
+  service: '',
   message: '',
   consent: false,
 };
 
+const REQUIRED = { name: 'Full name', email: 'Email', phone: 'Phone', address: 'Address', message: 'Message' };
+
 export default function ContactForm() {
-  const [form, setForm] = useState(initialState);
+  const { configured, user, profile } = useAuth();
+  const location = useLocation();
+  const { form, setForm, saveDraft, clearDraft } = useDraftForm('kontinue:contact-draft', initialState);
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ type: '', message: '' });
+  const [needsLogin, setNeedsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  usePrefillFromProfile(profile, setForm);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
     setForm((current) => ({ ...current, [name]: type === 'checkbox' ? checked : value }));
   };
 
+  const validate = () => {
+    const fieldErrors = requireFields(form, REQUIRED);
+    if (form.email && !isEmail(form.email)) fieldErrors.email = 'Enter a valid email address.';
+    if (form.phone && !isPhone(form.phone)) fieldErrors.phone = 'Enter a valid phone number.';
+    if (!form.consent) fieldErrors.consent = 'Please accept the privacy policy consent.';
+    return fieldErrors;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (loading) return;
     setStatus({ type: '', message: '' });
 
-    if (!form.name || !form.email || !form.message || !form.consent) {
-      setStatus({ type: 'error', message: 'Please complete the required fields and accept the privacy policy consent.' });
+    const fieldErrors = validate();
+    setErrors(fieldErrors);
+    if (Object.keys(fieldErrors).length) {
+      setStatus({ type: 'error', message: 'Please complete the highlighted fields.' });
+      return;
+    }
+
+    if (!configured) {
+      setStatus({ type: 'error', message: 'Online requests are not available yet. Please try again later.' });
+      return;
+    }
+
+    if (!user) {
+      saveDraft();
+      setNeedsLogin(true);
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+      const { data, error } = await supabase
+        .from('contact_requests')
+        .insert({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          address: form.address.trim(),
+          company: form.company.trim() || null,
+          service: form.service || null,
+          message: form.message.trim(),
+        })
+        .select('id, reference')
+        .single();
+      if (error) throw error;
+
+      notifyByEmail('/api/contact', { ...form, reference: data.reference });
+      clearDraft();
+      setForm({ ...initialState, name: form.name, email: form.email, phone: form.phone, address: form.address });
+      setErrors({});
+      setStatus({
+        type: 'success',
+        message: `Your message has been submitted successfully. Our team will review your request and get back to you. Reference: ${data.reference}`,
+        id: data.id,
       });
-
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.message || 'Unable to send your enquiry right now.');
-      }
-
-      setStatus({ type: 'success', message: payload.message || 'Your enquiry has been sent successfully.' });
-      setForm(initialState);
     } catch (error) {
-      setStatus({ type: 'error', message: error.message });
+      setStatus({ type: 'error', message: friendlyError(error) });
     } finally {
       setLoading(false);
     }
   };
 
+  const props = (id, name, required = false) => fieldProps(id, name, form, handleChange, errors, required);
+
   return (
     <form onSubmit={handleSubmit} className="form-grid" noValidate>
-      <div className="field">
-        <label htmlFor="name">Full Name</label>
-        <input id="name" name="name" value={form.name} onChange={handleChange} placeholder="Your name" />
-      </div>
-      <div className="field">
-        <label htmlFor="company">Company Name</label>
-        <input id="company" name="company" value={form.company} onChange={handleChange} placeholder="Company or business name" />
-      </div>
-      <div className="field">
-        <label htmlFor="email">Email Address</label>
-        <input id="email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com" />
-      </div>
-      <div className="field">
-        <label htmlFor="phone">Phone Number</label>
-        <input id="phone" name="phone" value={form.phone} onChange={handleChange} placeholder="Optional" />
-      </div>
-      <div className="field">
-        <label htmlFor="service">Service Required</label>
-        <select id="service" name="service" value={form.service} onChange={handleChange}>
-          <option>Bookkeeping &amp; Accounting</option>
-          <option>Annual Accounts</option>
-          <option>Tax Advisory</option>
-          <option>Financial Management</option>
-          <option>Payroll Administration</option>
-          <option>Other Enquiry</option>
+      <FormField id="name" label="Full Name" required error={errors.name}>
+        <input {...props('name', 'name', true)} autoComplete="name" placeholder="Your name" />
+      </FormField>
+      <FormField id="company" label="Company Name">
+        <input {...props('company', 'company')} autoComplete="organization" placeholder="Company or business name (optional)" />
+      </FormField>
+      <FormField id="email" label="Email Address" required error={errors.email}>
+        <input {...props('email', 'email', true)} type="email" autoComplete="email" placeholder="you@example.com" />
+      </FormField>
+      <FormField id="phone" label="Phone Number" required error={errors.phone}>
+        <input {...props('phone', 'phone', true)} type="tel" autoComplete="tel" placeholder="+31 …" />
+      </FormField>
+      <FormField id="address" label="Address" required error={errors.address}>
+        <input {...props('address', 'address', true)} autoComplete="street-address" placeholder="Street, city, postcode" />
+      </FormField>
+      <FormField id="service" label="Service of Interest">
+        <select {...props('service', 'service')}>
+          <option value="">Select a service (optional)</option>
+          {SERVICE_OPTIONS.map((option) => <option key={option}>{option}</option>)}
         </select>
-      </div>
-      <div className="field">
-        <label htmlFor="message">Message</label>
-        <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder="Tell us about your business needs" />
-      </div>
+      </FormField>
+      <FormField id="message" label="Message" required error={errors.message}>
+        <textarea {...props('message', 'message', true)} placeholder="Tell us about your business needs" />
+      </FormField>
       <label className="checkbox">
-        <input type="checkbox" name="consent" checked={form.consent} onChange={handleChange} />
+        <input
+          type="checkbox"
+          name="consent"
+          checked={form.consent}
+          onChange={handleChange}
+          aria-invalid={Boolean(errors.consent)}
+          aria-describedby={errors.consent ? 'consent-error' : undefined}
+        />
         <span>I consent to the processing of my information in accordance with the privacy policy.</span>
       </label>
-      <button type="submit" className="button button-primary" disabled={loading}>
-        {loading ? 'Sending…' : 'Send Enquiry'}
-      </button>
+      {errors.consent && <span id="consent-error" className="field-error">{errors.consent}</span>}
+
+      {needsLogin && !user ? (
+        <AuthPrompt
+          title="Log in to send your message"
+          text="Please log in or create an account to submit your request. Your message will be kept."
+          next={`${location.pathname}#contact-form`}
+          showContinue={false}
+        />
+      ) : (
+        <button type="submit" className="button button-primary" disabled={loading}>
+          {loading ? 'Submitting…' : 'Send Enquiry'}
+        </button>
+      )}
+
       {status.message && (
-        <div className={`form-status ${status.type === 'error' ? 'form-status--error' : 'form-status--success'}`}>
+        <div className={`form-status ${status.type === 'error' ? 'form-status--error' : 'form-status--success'}`} role={status.type === 'error' ? 'alert' : 'status'}>
           {status.message}
+          {status.type === 'success' && (
+            <> <Link to={`/my-portfolio/requests/contact/${status.id}`}>Track it in My Portfolio</Link></>
+          )}
         </div>
       )}
     </form>

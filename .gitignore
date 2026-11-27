@@ -2,3 +2,6 @@ node_modules/
 client/dist/
 server/.env
 *.log
+
+# Development-only test accounts (contain test passwords) - never commit
+supabase/test-data/

@@ -1,10 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Menu, X } from 'lucide-react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { ChevronDown, LogIn, LogOut, Menu, UserRound, X } from 'lucide-react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { navLinks, secondaryNavLinks, serviceCatalog } from '../data/siteData';
 import Logo from './Logo';
 
+const ACCOUNT_LINKS = {
+  admin: { to: '/admin', label: 'Admin Dashboard' },
+  service: { to: '/service', label: 'Consultant Portal' },
+};
+
 export default function Header() {
+  const { user, role, signOut } = useAuth();
+  const navigate = useNavigate();
+  const accountLink = ACCOUNT_LINKS[role] || { to: '/my-portfolio', label: 'My Portfolio' };
+
+  // Leave the private page first, so its login guard doesn't redirect to a login screen.
+  const handleLogout = async () => {
+    navigate('/', { replace: true });
+    await signOut();
+  };
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -165,7 +181,21 @@ export default function Header() {
           </nav>
 
           <div className="header-actions">
-            <Link to="/contact" className="button button-outline-light button--sm header-cta">Book a Consultation</Link>
+            {user ? (
+              <>
+                <NavLink to={accountLink.to} className="header-account">
+                  <UserRound size={16} aria-hidden="true" /> {accountLink.label}
+                </NavLink>
+                <button type="button" className="header-account" onClick={handleLogout}>
+                  <LogOut size={16} aria-hidden="true" /> Logout
+                </button>
+              </>
+            ) : (
+              <NavLink to="/login" className="header-account">
+                <LogIn size={16} aria-hidden="true" /> Login
+              </NavLink>
+            )}
+            <Link to="/book-consultation" className="button button-outline-light button--sm header-cta">Book a Consultation</Link>
             <button
               ref={menuToggleRef}
               className="mobile-menu-toggle"
@@ -223,8 +253,17 @@ export default function Header() {
                   {item.label}
                 </NavLink>
               ))}
+              <div className="mobile-menu__divider" aria-hidden="true" />
+              {user ? (
+                <>
+                  <NavLink to={accountLink.to}>{accountLink.label}</NavLink>
+                  <button type="button" className="mobile-menu__logout" onClick={handleLogout}>Logout</button>
+                </>
+              ) : (
+                <NavLink to="/login">Login</NavLink>
+              )}
             </nav>
-            <Link to="/contact" className="button button-primary mobile-menu__cta">Book a Consultation</Link>
+            <Link to="/book-consultation" className="button button-primary mobile-menu__cta">Book a Consultation</Link>
           </div>
         </div>
       </header>

@@ -12,8 +12,11 @@ export default function ScrollToTop() {
   };
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }, [location.pathname]);
+    // Links like /contact#contact-form land on that section (used after login).
+    const target = location.hash && document.getElementById(location.hash.slice(1));
+    if (target) target.scrollIntoView({ block: 'start' });
+    else window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 480);

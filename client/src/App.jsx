@@ -14,6 +14,12 @@ import CaseStudiesPage from './pages/CaseStudiesPage';
 import ContactPage from './pages/ContactPage';
 import LegalPage from './pages/LegalPage';
 import NotFoundPage from './pages/NotFoundPage';
+import BookConsultationPage from './pages/BookConsultationPage';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import { ForgotPasswordPage, ResetPasswordPage } from './pages/auth/PasswordPages';
+import { workspaceRoutes } from './pages/WorkspaceRoutes';
+import './styles/portal.css';
 
 function AppLayout() {
   return (
@@ -34,6 +40,17 @@ function AppLayout() {
           <Route path="/cookie-policy" element={<LegalPage slug="cookie-policy" />} />
           <Route path="/disclaimer" element={<LegalPage slug="disclaimer" />} />
           <Route path="/company-details" element={<LegalPage slug="company-details" />} />
+
+          {/* Public: browsing and the booking page need no login; submitting does. */}
+          <Route path="/book-consultation" element={<BookConsultationPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          {/* Private: My Portfolio, Consultant and Admin, all inside this same Header/Footer. */}
+          {workspaceRoutes}
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
