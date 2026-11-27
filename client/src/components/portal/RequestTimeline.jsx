@@ -1,4 +1,4 @@
-import { formatDateTime, statusLabel } from '../../lib/requests';
+import { formatDateTime, statusLabel } from '../../services/requestService';
 
 const ROLE_NAMES = { admin: 'Kontinue', service: 'Kontinue consultant', user: 'You', system: 'Kontinue' };
 

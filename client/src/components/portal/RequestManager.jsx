@@ -2,7 +2,7 @@ import { ArrowLeft, Mail, Phone } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { friendlyError } from '../../lib/errors';
+import { friendlyError } from '../../utils/errors';
 import {
   addNote,
   addResponse,
@@ -17,7 +17,7 @@ import {
   statusesFor,
   statusLabel,
   updateRequest,
-} from '../../lib/requests';
+} from '../../services/requestService';
 import { supabase } from '../../lib/supabaseClient';
 import { EmptyState, ErrorNotice, PortalLoading, SuccessNotice } from './PortalStates';
 import RequestTimeline from './RequestTimeline';
